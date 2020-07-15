@@ -158,7 +158,7 @@ def main():
     params = [value.numel() for value in model.parameters()]
     print(params)
     print(np.sum(params))
-    print num_entities
+    print(num_entities)
 
 
 
