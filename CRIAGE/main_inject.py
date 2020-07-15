@@ -250,7 +250,7 @@ def main():
             e2 = e2.strip()#.lower()
             rel = rel.strip()#.lower()
             train_data += [[e1, rel, e2]]
-    print len(train_data)
+    print(len(train_data))
 
     attack_list = []
     E2_list = []
@@ -263,7 +263,7 @@ def main():
             attack_list += [[dict_tokentoid[e1], dict_reltoid[rel], dict_tokentoid[e2]]]
             E2_list += [e2]
 
-    print len(attack_list)
+    print(len(attack_list))
     E2_list = set(E2_list)
     E2_dict = {}
     for i in train_data:
@@ -281,7 +281,7 @@ def main():
     n_t = 0
     for trip in attack_list:
         if n_t % 500 == 0:
-            print 'Number of processed triple: ', n_t
+            print('Number of processed triple: ', n_t)
 
         n_t += 1
         e1 = trip[0]
@@ -311,7 +311,7 @@ def main():
 
 
     new_train = str_at + train_data
-    print len(new_train)
+    print(len(new_train))
     with open('data/new_'+Config.dataset+'/train.txt', 'w') as f:
         for item in new_train:
             f.write("%s\n" % "\t".join(map(str, item)))
