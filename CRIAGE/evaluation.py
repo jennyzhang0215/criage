@@ -77,6 +77,10 @@ def ranking_and_hits(model, dev_rank_batcher, vocab, name, epoch, dict_idtotoken
             print(i, 'e2', e2[i, 0])
             print('np.where(argsort1[i]==e2[i, 0])', np.where(argsort1[i]==e2[i, 0]))
             print('np.where(argsort2[i]==e1[i, 0])', np.where(argsort2[i]==e1[i, 0]))
+            print('np.where(argsort1[i]==e1[i, 0])', np.where(argsort1[i]==e1[i, 0]))
+            print('np.where(argsort2[i]==e2[i, 0])', np.where(argsort1[i]==e2[i, 0]))
+
+
             rank1 = np.where(argsort1[i]==e2[i, 0])[0][0]
             rank2 = np.where(argsort2[i]==e1[i, 0])[0][0]
 
