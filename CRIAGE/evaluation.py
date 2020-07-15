@@ -75,6 +75,14 @@ def ranking_and_hits(model, dev_rank_batcher, vocab, name, epoch, dict_idtotoken
             print(i, "argsort2", argsort2[i].shape, argsort2[i])
             print(i, 'e1', e1[i, 0])
             print(i, 'e2', e2[i, 0])
+            for v in argsort1[i]:
+                if v == e2[i, 0]:
+                    print('Found {} in argsort1[{}]'.format(e2[i, 0], i))
+                    break
+            for v in argsort2[i]:
+                if v == e1[i, 0]:
+                    print('Found {} in argsort2[{}]'.format(e1[i, 0], i))
+                    break
             print('np.where(argsort1[i]==e2[i, 0])', np.where(argsort1[i]==e2[i, 0]))
             print('np.where(argsort2[i]==e1[i, 0])', np.where(argsort2[i]==e1[i, 0]))
             print('np.where(argsort1[i]==e1[i, 0])', np.where(argsort1[i]==e1[i, 0]))
