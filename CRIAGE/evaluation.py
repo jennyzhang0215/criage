@@ -67,33 +67,29 @@ def ranking_and_hits(model, dev_rank_batcher, vocab, name, epoch, dict_idtotoken
 
         argsort1 = argsort1.cpu().numpy()
         argsort2 = argsort2.cpu().numpy()
+        e1 = e1.cpu().numpy()
+        e2 = e2.cpu().numpy()
 
         for i in range(10,Config.batch_size):
             # find the rank of the target entities
-            print(type(argsort1[i]), type(e2[i, 0]))
-            print(type(argsort2[i]), type(e1[i, 0]))
+            # print(type(argsort1[i]), type(e2[i, 0]))
+            # print(type(argsort2[i]), type(e1[i, 0]))
+            # for v in argsort1[i]:
+            #     if v == e2[i, 0]:
+            #         print('Found {} in argsort1[{}]'.format(e2[i, 0], i))
+            #         break
+            # for v in argsort2[i]:
+            #     if v == e1[i, 0]:
+            #         print('Found {} in argsort2[{}]'.format(e1[i, 0], i))
+            #         break
+            # print('np.where(argsort1[i]==e2[i, 0])', np.where(argsort1[i]==e2[i, 0]))
+            # print('np.where(argsort2[i]==e1[i, 0])', np.where(argsort2[i]==e1[i, 0]))
+            # print('np.where(argsort1[i]==e1[i, 0])', np.where(argsort1[i]==e1[i, 0]))
+            # print('np.where(argsort2[i]==e2[i, 0])', np.where(argsort1[i]==e2[i, 0]))
 
-            for v in argsort1[i]:
-                if v == e2[i, 0]:
-                    print('Found {} in argsort1[{}]'.format(e2[i, 0], i))
-                    break
-            for v in argsort2[i]:
-                if v == e1[i, 0]:
-                    print('Found {} in argsort2[{}]'.format(e1[i, 0], i))
-                    break
-            print('np.where(argsort1[i]==e2[i, 0])', np.where(argsort1[i]==e2[i, 0]))
-            print('np.where(argsort2[i]==e1[i, 0])', np.where(argsort2[i]==e1[i, 0]))
-            print('np.where(argsort1[i]==e1[i, 0])', np.where(argsort1[i]==e1[i, 0]))
-            print('np.where(argsort2[i]==e2[i, 0])', np.where(argsort1[i]==e2[i, 0]))
+            rank1 = np.where(argsort1[i]==e2[i, 0])[0][0]
+            rank2 = np.where(argsort2[i]==e1[i, 0])[0][0]
 
-            try:
-                rank1 = np.where(argsort1[i]==e2[i, 0])[0][0]
-            except:
-                rank1 = int('inf')
-            try:
-                rank2 = np.where(argsort2[i]==e1[i, 0])[0][0]
-            except:
-                rank2 = int('inf')
 
             ranks.append(rank1+1)
             ranks_left.append(rank1+1)
