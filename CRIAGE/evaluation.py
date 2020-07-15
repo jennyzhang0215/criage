@@ -69,10 +69,10 @@ def ranking_and_hits(model, dev_rank_batcher, vocab, name, epoch, dict_idtotoken
         argsort2 = argsort2.cpu().numpy()
         print("argsort1", argsort1.shape, 'argsort2', argsort2.shape)
         print("e1", e1.shape, "e2", e2.shape)
-        for i in range(Config.batch_size):
+        for i in range(10,Config.batch_size):
             # find the rank of the target entities
-            print(i, "argsort1", argsort1[i].shape)
-            print(i, "argsort2", argsort2[i].shape)
+            print(i, "argsort1", argsort1[i].shape, argsort1[i])
+            print(i, "argsort2", argsort2[i].shape, argsort2[i])
             print(i, 'e1', e1[i, 0])
             print(i, 'e2', e2[i, 0])
             print('np.where(argsort1[i]==e2[i, 0])', np.where(argsort1[i]==e2[i, 0]))
