@@ -2,7 +2,7 @@ import torch
 from torch.nn import functional as F, Parameter
 from torch.autograd import Variable
 from spodernet.utils.global_config import Config
-from torch.nn.init import xavier_normal, xavier_uniform
+from torch.nn.init import xavier_normal_, xavier_uniform_
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 
 
@@ -18,10 +18,10 @@ class Complex(torch.nn.Module):
         self.loss = torch.nn.BCELoss()
 
     def init(self):
-        xavier_normal(self.emb_e_real.weight.data)
-        xavier_normal(self.emb_e_img.weight.data)
-        xavier_normal(self.emb_rel_real.weight.data)
-        xavier_normal(self.emb_rel_img.weight.data)
+        xavier_normal_(self.emb_e_real.weight.data)
+        xavier_normal_(self.emb_e_img.weight.data)
+        xavier_normal_(self.emb_rel_real.weight.data)
+        xavier_normal_(self.emb_rel_img.weight.data)
 
     def forward(self, e1, rel):
 
@@ -54,8 +54,8 @@ class DistMult(torch.nn.Module):
         self.loss = torch.nn.BCELoss()
 
     def init(self):
-        xavier_normal(self.emb_e.weight.data)
-        xavier_normal(self.emb_rel.weight.data)
+        xavier_normal_(self.emb_e.weight.data)
+        xavier_normal_(self.emb_rel.weight.data)
 
     def forward(self, e1, rel):
         e1_embedded= self.emb_e(e1)
@@ -91,8 +91,8 @@ class ConvE(torch.nn.Module):
         print(num_entities, num_relations)
 
     def init(self):
-        xavier_normal(self.emb_e.weight.data)
-        xavier_normal(self.emb_rel.weight.data)
+        xavier_normal_(self.emb_e.weight.data)
+        xavier_normal_(self.emb_rel.weight.data)
 
     def forward(self, e1, rel, E2= None):
         e1_embedded= self.emb_e(e1).view(Config.batch_size, 1, 10, 20)
