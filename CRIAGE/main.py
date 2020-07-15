@@ -149,18 +149,14 @@ def main():
     else:
         model.init()
 
-    total_param_size = []
+
     params = [value.numel() for value in model.parameters()]
     print(params)
     print(np.sum(params))
     print(num_entities)
-
-
-
     opt = torch.optim.Adam(model.parameters(), lr=Config.learning_rate, weight_decay=Config.L2)
     for epoch in range(epochs):
         model.train()
-
         for i, str2var in enumerate(train_batcher):
             opt.zero_grad()
             e1 = str2var['e1']
@@ -176,7 +172,6 @@ def main():
             opt.step()
 
             train_batcher.state.loss = loss
-
 
         print('saving to {0}'.format(model_path))
 

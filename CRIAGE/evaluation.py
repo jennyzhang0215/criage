@@ -7,12 +7,8 @@ import sys
 #sys.setdefaultencoding('utf-8')
 
 from spodernet.utils.global_config import Config
-from spodernet.utils.cuda_utils import CUDATimer
 from spodernet.utils.logger import Logger
-from torch.autograd import Variable
-from sklearn import metrics
 
-#timer = CUDATimer()
 log = Logger('evaluation{0}.py.txt'.format(datetime.datetime.now()))
 
 def ranking_and_hits(model, dev_rank_batcher, vocab, name, epoch, dict_idtotoken, dict_idtorel):
@@ -30,7 +26,6 @@ def ranking_and_hits(model, dev_rank_batcher, vocab, name, epoch, dict_idtotoken
     mrr_left = []
     mrr_right = []
     rel2ranks = {}
-
 
     for i in range(10):
         hits_left.append([])
@@ -75,6 +70,8 @@ def ranking_and_hits(model, dev_rank_batcher, vocab, name, epoch, dict_idtotoken
 
         for i in range(Config.batch_size):
             # find the rank of the target entities
+            print('argsort1[i]==e2[i, 0]', argsort1[i]==e2[i, 0])
+            print('np.where(argsort1[i]==e2[i, 0])', np.where(argsort1[i]==e2[i, 0]))
             rank1 = np.where(argsort1[i]==e2[i, 0])[0][0]
             rank2 = np.where(argsort2[i]==e1[i, 0])[0][0]
 
