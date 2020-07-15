@@ -101,9 +101,8 @@ def main():
 
     num_entities = vocab['e1'].num_token
     num_rel = vocab['rel'].num_token
-    print("vocab['e1']", type(vocab['e1']), vocab['e1'])
-    dict_tokentoid, dict_idtotoken = vocab['e1'].tokendicts()
-    dict_reltoid, dict_idtorel = vocab['rel'].tokendicts()
+    dict_tokentoid, dict_idtotoken = vocab['e1'].token2idx, vocab['e1'].idx2token
+    dict_reltoid, dict_idtorel = vocab['e1'].token2idx, vocab['e1'].idx2token
 
     train_batcher = StreamBatcher(Config.dataset, 'train', Config.batch_size, randomize=True, keys=input_keys)
     dev_rank_batcher = StreamBatcher(Config.dataset, 'dev_ranking', Config.batch_size, randomize=False, loader_threads=4, keys=input_keys, is_volatile=True)
@@ -118,10 +117,10 @@ def main():
         model = DistMult(vocab['e1'].num_token, vocab['rel'].num_token)
     elif Config.model_name == 'ComplEx':
         model = Complex(vocab['e1'].num_token, vocab['rel'].num_token)
-    elif Config.model_name == 'TransE':
-        model = TransE(vocab['e1'].num_token, num_rel)
+    # elif Config.model_name == 'TransE':
+    #     model = TransE(vocab['e1'].num_token, num_rel)
     else:
-        log.info('Unknown model: {0}', Config.model_name)
+        #log.info('Unknown model: {0}', Config.model_name)
         raise Exception("Unknown model!")
 
     train_batcher.at_batch_prepared_observers.insert(1,TargetIdx2MultiTarget(num_entities, 'e2_multi1', 'e2_multi1_binary'))

@@ -45,7 +45,6 @@ class Complex(torch.nn.Module):
 
         return pred
 
-
 class DistMult(torch.nn.Module):
     def __init__(self, num_entities, num_relations):
         super(DistMult, self).__init__()
@@ -72,8 +71,6 @@ class DistMult(torch.nn.Module):
         pred = F.sigmoid(pred)
 
         return pred
-
-
 
 class ConvE(torch.nn.Module):
     def __init__(self, num_entities, num_relations):
