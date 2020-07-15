@@ -6,10 +6,8 @@ from torch.autograd import Variable
 from spodernet.utils.global_config import Config
 from spodernet.utils.cuda_utils import CUDATimer
 from torch.nn.init import xavier_normal, xavier_uniform
-from spodernet.utils.cuda_utils import CUDATimer
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 
-timer = CUDATimer()
 
 
 class Complex(torch.nn.Module):
@@ -80,7 +78,7 @@ class DistMult(torch.nn.Module):
         rel_embedded = rel_embedded.view(-1, Config.embedding_dim)
 
         pred = e1_embedded*rel_embedded
-	return self.decoder(pred)
+        return self.decoder(pred)
 
     def encoder(self, e1, rel):
         e1_embedded= self.emb_e(e1)
@@ -89,11 +87,11 @@ class DistMult(torch.nn.Module):
         rel_embedded = rel_embedded.view(-1, Config.embedding_dim)
 
         pred = e1_embedded*rel_embedded
-	return pred
+        return pred
 
     def encoder_2(self, e1):
         e1_embedded= self.emb_e(e1)
-	return e1_embedded
+        return e1_embedded
 
     def decoder(self, pred):
         pred = self.linear_t(pred)
@@ -137,7 +135,7 @@ class ConvE(torch.nn.Module):
         xavier_normal(self.emb_e.weight.data)
         xavier_normal(self.emb_rel.weight.data)
 
-    def forward(self, e1, rel, E2= None):
+    def forward(self, e1, rel, E2=None):
         e1_embedded= self.emb_e(e1).view(Config.batch_size, 1, 10, 20)#(Config.batch_size, 1, 10, 20)
         rel_embedded = self.emb_rel(rel).view(Config.batch_size, 1, 10, 20)#(Config.batch_size, 1, 10, 20)
 

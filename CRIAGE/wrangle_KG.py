@@ -33,14 +33,6 @@ for p in files:
     with open(join(base_path, p)) as f:
         data = f.readlines() + data
 
-
-def convert_mid(e):
-    if e in mid2data:
-        if 'name' in mid2data[e]:
-            return mid2data[e]['name']
-    return e
-
-
 egraph = {}
 d_egraph = {}
 d_egraph_sets = {}
@@ -80,7 +72,7 @@ for p in files:
             if e2+rel not in e_rel_direction:
                 e_rel_direction[e2+rel] = 'right'
             else:
-                e_rel_direction[e2+rel] == 'bidirectional'
+                e_rel_direction[e2+rel] = 'bidirectional'
 
             d_egraph[(e1, rel)].add(e2)
             d_egraph[(e2, rel)].add(e1)

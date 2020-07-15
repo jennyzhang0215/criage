@@ -3,8 +3,8 @@ import numpy as np
 import datetime
 import operator
 import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
+#reload(sys)
+#sys.setdefaultencoding('utf-8')
 
 from spodernet.utils.global_config import Config
 from spodernet.utils.cuda_utils import CUDATimer
@@ -112,13 +112,13 @@ def ranking_and_hits(model, dev_rank_batcher, vocab, name, epoch, dict_idtotoken
     log.info('Mean reciprocal rank right: {0}', np.mean(1./np.array(ranks_right)))
     log.info('Mean reciprocal rank: {0}', np.mean(1./np.array(ranks)))
     with open("Output.txt", "a") as text_file:
-	text_file.write('{0}\n'.format(name))
+        text_file.write('{0}\n'.format(name))
         text_file.write('Hits @{0}: {1}\n'.format(1, np.mean(hits[0])))
-	text_file.write('Hits @{0}: {1}\n'.format(3, np.mean(hits[2])))
-	text_file.write('Hits @{0}: {1}\n'.format(10, np.mean(hits[9])))
-	text_file.write('MRR: {0}\n'.format(np.mean(1./np.array(ranks))))
-	text_file.write('epoch: {0}\n'.format(epoch))
-	text_file.write('-------------------------------------------------\n')
+        text_file.write('Hits @{0}: {1}\n'.format(3, np.mean(hits[2])))
+        text_file.write('Hits @{0}: {1}\n'.format(10, np.mean(hits[9])))
+        text_file.write('MRR: {0}\n'.format(np.mean(1./np.array(ranks))))
+        text_file.write('epoch: {0}\n'.format(epoch))
+        text_file.write('-------------------------------------------------\n')
 
 def attack_tri(model, dev_rank_batcher, vocab, name, epoch, dict_idtotoken, dict_idtorel):
     log.info('')
@@ -211,12 +211,11 @@ def attack_tri(model, dev_rank_batcher, vocab, name, epoch, dict_idtotoken, dict
         attack_set +=  [[dict_idtotoken[i[0][0]], dict_idtorel[i[0][1]], dict_idtotoken[i[0][2]]]]
         #attack_set +=  [(i[0][0], i[0][2])]
 
-    print sorted_score
-    print len(dict_score)
+    print(sorted_score)
+    print(len(dict_score))
     with open('data/WN-18/new_test_4.txt', 'w') as f:
         for item in attack_set:
             #print item[0], item[1], item[2]
             f.write("%s\n" % "\t".join(map(str, item)))
     #np.save('data/attack_set', attack_set)
-    print pouya
     return attack_set

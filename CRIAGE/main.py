@@ -7,13 +7,12 @@ import argparse
 import sys
 import os
 import math
-reload(sys)
-sys.setdefaultencoding('utf-8')
+#reload(sys)
+#sys.setdefaultencoding('utf-8')
 import codecs
 import random
-
 from os.path import join
-import torch.backends.cudnn as cudnn
+#import torch.backends.cudnn as cudnn
 
 #from num_process import num_nextbatch
 from evaluation import ranking_and_hits, attack_tri

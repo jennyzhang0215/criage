@@ -1,15 +1,9 @@
 import torch
 from torch.nn import functional as F, Parameter
 from torch.autograd import Variable
-
-
 from spodernet.utils.global_config import Config
-from spodernet.utils.cuda_utils import CUDATimer
 from torch.nn.init import xavier_normal, xavier_uniform
-from spodernet.utils.cuda_utils import CUDATimer
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
-
-timer = CUDATimer()
 
 
 class Complex(torch.nn.Module):

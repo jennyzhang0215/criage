@@ -7,8 +7,8 @@ import argparse
 import sys
 import os
 import math
-reload(sys)
-sys.setdefaultencoding('utf-8')
+#reload(sys)
+#sys.setdefaultencoding('utf-8')
 import codecs
 import random
 
@@ -197,7 +197,7 @@ def main():
     elif Config.model_name == 'ComplEx':
         model = Complex(vocab['e1'].num_token, vocab['rel'].num_token)
     else:
-        log.info('Unknown model: {0}', Config.model_name)
+        #log.info('Unknown model: {0}', Config.model_name)
         raise Exception("Unknown model!")
 
     train_batcher.at_batch_prepared_observers.insert(1,TargetIdx2MultiTarget(num_entities, 'e2_multi1', 'e2_multi1_binary'))

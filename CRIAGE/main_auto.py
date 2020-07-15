@@ -7,8 +7,8 @@ import argparse
 import sys
 import os
 import math
-reload(sys)
-sys.setdefaultencoding('utf-8')
+#reload(sys)
+#sys.setdefaultencoding('utf-8')
 import codecs
 import random
 
@@ -124,7 +124,7 @@ def main():
     elif Config.model_name == 'ComplEx':
         model = Complex(vocab['e1'].num_token, vocab['rel'].num_token)
     else:
-        log.info('Unknown model: {0}', Config.model_name)
+        #log.info('Unknown model: {0}', Config.model_name)
         raise Exception("Unknown model!")
 
     train_batcher.at_batch_prepared_observers.insert(1,TargetIdx2MultiTarget(num_entities, 'e2_multi1', 'e2_multi1_binary'))
@@ -164,7 +164,7 @@ def main():
     pretrained = torch.load('embeddings/original_embeddings.pt')
     for name in model_state:
         if name in pretrained:
-	       model_state[name].copy_(pretrained[name])   
+            model_state[name].copy_(pretrained[name])
 
     opt = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=Config.learning_rate, weight_decay=Config.L2)
 
@@ -184,7 +184,6 @@ def main():
             opt.step()
 
             train_batcher.state.loss = loss
-
 
         print('saving to {0}'.format(model_path))
 
