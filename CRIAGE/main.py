@@ -30,8 +30,7 @@ from spodernet.utils.util import Timer
 from spodernet.utils.cuda_utils import CUDATimer
 from spodernet.preprocessing.processors import TargetIdx2MultiTarget
 np.set_printoptions(precision=3)
-
-timer = CUDATimer()
+#timer = CUDATimer()
 
 # parse console parameters and set global variables
 Config.backend = Backends.TORCH
@@ -102,6 +101,7 @@ def main():
 
     num_entities = vocab['e1'].num_token
     num_rel = vocab['rel'].num_token
+    print("vocab['e1']", type(vocab['e1']), vocab['e1'])
     dict_tokentoid, dict_idtotoken = vocab['e1'].tokendicts()
     dict_reltoid, dict_idtorel = vocab['rel'].tokendicts()
 
