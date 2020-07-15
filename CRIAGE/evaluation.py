@@ -67,12 +67,12 @@ def ranking_and_hits(model, dev_rank_batcher, vocab, name, epoch, dict_idtotoken
 
         argsort1 = argsort1.cpu().numpy()
         argsort2 = argsort2.cpu().numpy()
-        print("argsort1", argsort1)
-        print("e2", e2)
+        print("argsort1", argsort1.shape, 'argsort2', argsort2.shape)
+        print("e1", e1.shape, "e2", e2.shape)
         for i in range(Config.batch_size):
             # find the rank of the target entities
-            print(i, "argsort1", argsort1[i])
-            print(i, "argsort2", argsort2[i])
+            print(i, "argsort1", argsort1[i].shape)
+            print(i, "argsort2", argsort2[i].shape)
             print(i, 'e1', e1[i, 0])
             print(i, 'e2', e2[i, 0])
             print('np.where(argsort1[i]==e2[i, 0])', np.where(argsort1[i]==e2[i, 0]))
@@ -80,9 +80,14 @@ def ranking_and_hits(model, dev_rank_batcher, vocab, name, epoch, dict_idtotoken
             print('np.where(argsort1[i]==e1[i, 0])', np.where(argsort1[i]==e1[i, 0]))
             print('np.where(argsort2[i]==e2[i, 0])', np.where(argsort1[i]==e2[i, 0]))
 
-
-            rank1 = np.where(argsort1[i]==e2[i, 0])[0][0]
-            rank2 = np.where(argsort2[i]==e1[i, 0])[0][0]
+            try:
+                rank1 = np.where(argsort1[i]==e2[i, 0])[0][0]
+            except:
+                rank1 = int('inf')
+            try:
+                rank2 = np.where(argsort2[i]==e1[i, 0])[0][0]
+            except:
+                rank2 = int('inf')
 
             ranks.append(rank1+1)
             ranks_left.append(rank1+1)
