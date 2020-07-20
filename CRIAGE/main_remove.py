@@ -101,7 +101,7 @@ def find_best_attack(e_o, e_s, Y1, Y2, nei1, nei2, embd_e, embd_rel, model):
             dict_s[i] = score_t
 
     sorted_score = sorted(dict_s.items(), key=operator.itemgetter(1))
-    print("sorted_score", sorted_score)
+    print("sorted difference scores (triplet, score difference):", sorted_score)
 
     triple = sorted_score[0][0]
 
@@ -284,7 +284,7 @@ def main():
             print('Number of processed triple: ', n_t)
         n_t += 1
         e1_or, rel, e2_or = trip[0], trip[1], trip[2]
-        print('\n\noriginal score (<{},{}>,{})'.format(e1_or, rel, e2_or))
+        print('\n\noriginal score of ({},{},{}):'.format(e1_or, rel, e2_or))
         e1 = torch.cuda.LongTensor([e1_or])
         rel = torch.cuda.LongTensor([rel])
         e2 = torch.cuda.LongTensor([e2_or])
