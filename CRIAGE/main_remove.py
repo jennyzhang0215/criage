@@ -291,10 +291,10 @@ def main():
         pred2 = model.encoder(e2, rel) # f_{r,t}
         E2 = model.encoder_2(e2) # e_2
         E1 = model.encoder_2(e1) # e_1
-        print('original score (<{},{}>,{})', e1_or, rel, e2_or,
+        print('\n\noriginal score (<{},{}>,{})', e1_or, rel, e2_or,
               np.dot(E2.cpu().numpy(), np.transpose(model.encoder(e1, rel).data.cpu().numpy())))
-        print('original score ({},<{},{}>)', e1_or, rel, e2_or,
-              np.dot(E1.cpu().numpy(), np.transpose(model.encoder(e2, rel).data.cpu().numpy())))
+        #print('original score ({},<{},{}>)', e1_or, rel, e2_or,
+        #      np.dot(E1.cpu().numpy(), np.transpose(model.encoder(e2, rel).data.cpu().numpy())))
 
         at_list1 = []
         at_list2 = []
