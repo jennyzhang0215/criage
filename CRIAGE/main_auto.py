@@ -127,8 +127,8 @@ def main():
         #log.info('Unknown model: {0}', Config.model_name)
         raise Exception("Unknown model!")
 
-    train_batcher.at_batch_prepared_observers.insert(1,TargetIdx2MultiTarget(num_entities, 'e2_multi1', 'e2_multi1_binary'))
-
+    train_batcher.at_batch_prepared_observers.insert(1, TargetIdx2MultiTarget(num_entities,
+                                                                              'e2_multi1', 'e2_multi1_binary'))
 
     eta = ETAHook('train', print_every_x_batches=100)
     train_batcher.subscribe_to_events(eta)
@@ -166,7 +166,8 @@ def main():
         if name in pretrained:
             model_state[name].copy_(pretrained[name])
 
-    opt = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=Config.learning_rate, weight_decay=Config.L2)
+    opt = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()),
+                           lr=Config.learning_rate, weight_decay=Config.L2)
 
     for epoch in range(epochs):
         model.train()
