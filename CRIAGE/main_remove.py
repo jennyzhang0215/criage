@@ -175,17 +175,16 @@ def main():
     p = Pipeline(Config.dataset, keys=input_keys)
     p.load_vocabs()
     vocab = p.state['vocab']
-
     num_entities = vocab['e1'].num_token
+    num_rel = vocab['rel'].num_token
     dict_tokentoid, dict_idtotoken = vocab['e1'].token2idx, vocab['e1'].idx2token
     dict_reltoid, dict_idtorel = vocab['e1'].token2idx, vocab['e1'].idx2token
-
-
-    num_rel = vocab['rel'].num_token 
-    train_batcher = StreamBatcher(Config.dataset, 'train', Config.batch_size, randomize=True, keys=input_keys)
-    dev_rank_batcher = StreamBatcher(Config.dataset, 'dev_ranking', Config.batch_size, randomize=False, loader_threads=4, keys=input_keys, is_volatile=True)
-    test_rank_batcher = StreamBatcher(Config.dataset, 'test_ranking', Config.batch_size, randomize=False, loader_threads=4, keys=input_keys, is_volatile=True)
-
+    train_batcher = StreamBatcher(Config.dataset, 'train', Config.batch_size,
+                                  randomize=True, keys=input_keys)
+    dev_rank_batcher = StreamBatcher(Config.dataset, 'dev_ranking', Config.batch_size,
+                                     randomize=False, loader_threads=4, keys=input_keys, is_volatile=True)
+    test_rank_batcher = StreamBatcher(Config.dataset, 'test_ranking', Config.batch_size,
+                                      randomize=False, loader_threads=4, keys=input_keys, is_volatile=True)
 
     if Config.model_name is None:
         model = ConvE(vocab['e1'].num_token, vocab['rel'].num_token)
@@ -199,9 +198,8 @@ def main():
         #log.info('Unknown model: {0}', Config.model_name)
         raise Exception("Unknown model!")
 
-    train_batcher.at_batch_prepared_observers.insert(1,TargetIdx2MultiTarget(num_entities, 'e2_multi1', 'e2_multi1_binary'))
-
-
+    train_batcher.at_batch_prepared_observers.insert(1, TargetIdx2MultiTarget(num_entities,
+                                                                              'e2_multi1', 'e2_multi1_binary'))
     eta = ETAHook('train', print_every_x_batches=100)
     train_batcher.subscribe_to_events(eta)
     train_batcher.subscribe_to_start_of_epoch_event(eta)
@@ -229,7 +227,7 @@ def main():
     params = [value.numel() for value in model.parameters()]
     print(params)
     print(np.sum(params))
-
+    print(model)
     model.load_state_dict(torch.load('embeddings/original_embeddings.pt'))
 
 
