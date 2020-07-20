@@ -48,7 +48,6 @@ Config.cuda = True
 Config.embedding_dim = 200
 #Logger.GLOBAL_LOG_LEVEL = LogLevel.DEBUG
 
-
 model_name = '{2}_{0}_{1}'.format(Config.input_dropout, Config.dropout, Config.model_name)
 epochs = 6
 load = False
@@ -249,18 +248,19 @@ def main():
             rel = rel.strip()#.lower()
             train_data += [[e1, rel, e2]]
     print("#train_data", len(train_data))
+
     attack_list = []
     E2_list = []
     with open('data/'+Config.dataset+'/test.txt', 'r') as f:
         for i, line in enumerate(f):
-            e1, rel, e2 = line.decode('utf-8').split('\t')
+            e1, rel, e2 = line.strip().split('\t')
             e1 = e1.strip().lower()
             e2 = e2.strip().lower()
             rel = rel.strip().lower()
             attack_list += [[dict_tokentoid[e1], dict_reltoid[rel], dict_tokentoid[e2]]]
             E2_list += [e2]
+    print('#attack_list', len(attack_list))
 
-    print('attack_list', len(attack_list))
     E2_list = set(E2_list)
     E2_dict = {}
     for i in train_data:
