@@ -179,7 +179,7 @@ def main():
     vocab = p.state['vocab']
 
     num_entities = vocab['e1'].num_token
-    num_rel = vocab['rel'].num_token 
+    num_rel = vocab['rel'].num_token
     dict_tokentoid, dict_idtotoken = vocab['e1'].token2idx, vocab['e1'].idx2token
     dict_reltoid, dict_idtorel = vocab['rel'].token2idx, vocab['rel'].idx2token
 
