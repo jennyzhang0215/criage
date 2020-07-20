@@ -20,8 +20,6 @@ import torch.backends.cudnn as cudnn
 #from num_process import num_nextbatch
 from evaluation import ranking_and_hits, attack_tri
 from model_auto import ConvE, DistMult, Complex
-#from model import ConvE, DistMult, Complex
-
 from spodernet.preprocessing.pipeline import Pipeline, DatasetStreamer
 from spodernet.preprocessing.processors import JsonLoaderProcessors, Tokenizer, AddToVocab, SaveLengthsToState, StreamToHDF5, SaveMaxLengthsToState, CustomTokenizer
 from spodernet.preprocessing.processors import ConvertTokenToIdx, ApplyFunction, ToLower, DictKey2ListMapper, ApplyFunction, StreamToBatch

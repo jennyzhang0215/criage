@@ -18,7 +18,6 @@ echo $DATASET
 python -u wrangle_KG.py $FULL_DATA_PATH
 
 echo "Start Training......"
-
 CUDA_VISIBLE_DEVICES=0 python -u main.py model $MODEL \
     input_drop 0.2 \
     hidden_drop 0.3 \
@@ -28,6 +27,15 @@ CUDA_VISIBLE_DEVICES=0 python -u main.py model $MODEL \
     dataset $DATASET \
     process $PROCESS \
 
+
+CUDA_VISIBLE_DEVICES=0 python -u main_auto.py model $MODEL \
+    input_drop 0.2 \
+    hidden_drop 0.3 \
+    feat_drop 0.2 \
+    lr 0.003 \
+    lr_decay 0.995 \
+    dataset $DATASET \
+    process $PROCESS \
 
 echo "Identifying The Attacks......"
 CUDA_VISIBLE_DEVICES=0 python -u main_remove.py model $MODEL \

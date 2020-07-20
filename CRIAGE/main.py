@@ -5,7 +5,7 @@ import sys
 #reload(sys)
 #sys.setdefaultencoding('utf-8')
 from evaluation import ranking_and_hits, attack_tri
-from model_auto import ConvE, DistMult, Complex
+from model import ConvE, DistMult, Complex
 from spodernet.preprocessing.pipeline import Pipeline, DatasetStreamer
 from spodernet.preprocessing.processors import JsonLoaderProcessors, AddToVocab, StreamToHDF5, CustomTokenizer
 from spodernet.preprocessing.processors import ConvertTokenToIdx, ToLower, DictKey2ListMapper
@@ -158,7 +158,7 @@ def main():
 
             #print('saving to {0}'.format(model_path))
 
-            if epoch % 5== 0:
+            if epoch % 5 == 0:
                 model.eval()
                 ranking_and_hits(model, test_rank_batcher, vocab, 'test_evaluation', epoch, dict_idtotoken, dict_idtorel)
 
