@@ -231,16 +231,13 @@ def main():
     p_dict = torch.load('embeddings/original_embeddings.pt')
     print("loaded dict:", p_dict)
     model.load_state_dict(p_dict)
-
-
-    opt = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=Config.learning_rate, weight_decay=Config.L2)
-    # One hot encoding buffer that you create out of the loop and just keep reusing
-    y_onehot_e1 = torch.FloatTensor(Config.batch_size, num_entities)
-    # One hot encoding buffer that you create out of the loop and just keep reusing
-    y_onehot_r = torch.FloatTensor(Config.batch_size, num_rel)
+    # opt = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=Config.learning_rate, weight_decay=Config.L2)
+    # # One hot encoding buffer that you create out of the loop and just keep reusing
+    # y_onehot_e1 = torch.FloatTensor(Config.batch_size, num_entities)
+    # # One hot encoding buffer that you create out of the loop and just keep reusing
+    # y_onehot_r = torch.FloatTensor(Config.batch_size, num_rel)
 
     model.eval()
-    #if epoch == 0:
 
     train_data =[]
     with open('data/'+Config.dataset+'/train.txt', 'r') as f:
@@ -250,7 +247,7 @@ def main():
             e2 = e2.strip()#.lower()
             rel = rel.strip()#.lower()
             train_data += [[e1, rel, e2]]
-    print(len(train_data))
+    print("#train_data", len(train_data))
     attack_list = []
     E2_list = []
     with open('data/'+Config.dataset+'/test.txt', 'r') as f:
@@ -262,7 +259,7 @@ def main():
             attack_list += [[dict_tokentoid[e1], dict_reltoid[rel], dict_tokentoid[e2]]]
             E2_list += [e2]
 
-    print(len(attack_list))
+    print('attack_list', len(attack_list))
     E2_list = set(E2_list)
     E2_dict = {}
     for i in train_data:
@@ -272,20 +269,16 @@ def main():
             else:
                 E2_dict[dict_tokentoid[i[2].lower()]] = [(dict_tokentoid[i[0].lower()], dict_reltoid[i[1].lower()], dict_tokentoid[i[2].lower()])]
 
-
     str_at = []
     embd_e = model.emb_e.weight.data.cpu().numpy()
     embd_rel = model.emb_rel.weight.data.cpu().numpy()
 
     n_t = 0
-        
     for trip in attack_list:
-        if n_t%200 == 0:
+        if n_t % 200 == 0:
             print('Number of processed triple: ', n_t)
         n_t += 1
-        e1_or = trip[0]
-        rel = trip[1]
-        e2_or = trip[2]
+        e1_or, rel, e2_or = trip[0], trip[1], trip[2]
         e1 = torch.cuda.LongTensor([e1_or])
         rel = torch.cuda.LongTensor([rel])
         e2 = torch.cuda.LongTensor([e2_or])
@@ -300,7 +293,6 @@ def main():
             at_list1 = E2_dict[e2_or]
         if e1_or in E2_dict:
             at_list2 = E2_dict[e1_or]
-        at = 0
         best_ne = []
         if len(at_list1)>0 or len(at_list2)>0:
             best_ne = find_best_attack(E2.data.cpu().numpy(), E1.data.cpu().numpy(), pred1.data.cpu().numpy(), pred2.data.cpu().numpy(), at_list1, at_list2, embd_e, embd_rel, model)
