@@ -47,6 +47,7 @@ CUDA_VISIBLE_DEVICES=0 python -u main_remove.py model $MODEL \
     dataset $DATASET \
     process $PROCESS \
 
+
 python -u wrangle_KG.py new_$DATASET
 echo "Retrainin The Model......"
 CUDA_VISIBLE_DEVICES=0 python -u main.py model $MODEL \

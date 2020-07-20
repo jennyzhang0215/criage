@@ -26,7 +26,7 @@ Config.embedding_dim = 200
 
 #model_name = 'DistMult_{0}_{1}'.format(Config.input_dropout, Config.dropout)
 model_name = '{2}_{0}_{1}'.format(Config.input_dropout, Config.dropout, Config.model_name)
-epochs = 11
+epochs = 95
 load = False
 
 #####
@@ -158,11 +158,11 @@ def main():
 
             #print('saving to {0}'.format(model_path))
 
-            if epoch % 5 == 0:
+            if epoch % 10 == 0:
                 model.eval()
                 ranking_and_hits(model, test_rank_batcher, vocab, 'test_evaluation', epoch, dict_idtotoken, dict_idtorel)
 
-            if epoch % 10 == 0 and epoch != 0:
+            if epoch % 90 == 0 and epoch != 0:
                 model.eval()
                 print('Save model embeddings to embeddings/original_embeddings.pt ...')
                 torch.save(model.state_dict(), "embeddings/original_embeddings.pt")
