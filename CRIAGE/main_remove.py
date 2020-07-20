@@ -60,19 +60,17 @@ def sig (x, y):
 def point_hess(e_o, nei, embd_e, embd_rel):
     H = np.zeros((200, 200))
     for i in nei:
-        X = np.multiply(np.reshape(embd_e[i[0]], (1, -1)), np.reshape(embd_rel[i[1]], (1, -1)))
+        X = np.multiply(np.reshape(embd_e[i[0]], (1, -1)),
+                        np.reshape(embd_rel[i[1]], (1, -1)))
         sig_tri = sig(e_o, X)
         Sig = (sig_tri)*(1-sig_tri)
         H += Sig * np.dot(np.transpose(X), X)
     return H
-
 def point_score(Y, X, e_o, H):
     sig_tri = sig(e_o, X) 
     M = np.linalg.inv(H + (sig_tri)*(1-sig_tri)*np.dot(np.transpose(X), X))
     Score = - np.dot(Y, np.transpose((1-sig_tri)*np.dot(X, M)))
     return Score, M
-
-
 def find_best_attack(e_o, e_s, Y1, Y2, nei1, nei2, embd_e, embd_rel, model):
     dict_s = {}
     if len(nei1) > 0:
@@ -101,6 +99,7 @@ def find_best_attack(e_o, e_s, Y1, Y2, nei1, nei2, embd_e, embd_rel, model):
             dict_s[i] = score_t
 
     sorted_score = sorted(dict_s.items(), key=operator.itemgetter(1))
+    print("sorted_score", sorted_score)
 
     triple = sorted_score[0][0]
 
@@ -258,8 +257,10 @@ def main():
             attack_list += [[dict_tokentoid[e1], dict_reltoid[rel], dict_tokentoid[e2]]]
             E2_list += [e2]
     print('#attack_list', len(attack_list))
-
+    print("#attack tail", len(E2_list))
     E2_list = set(E2_list)
+    print("#unique", len(E2_list))
+
     E2_dict = {}
     for i in train_data:
         if i[2].lower() in E2_list:
@@ -297,7 +298,11 @@ def main():
             at_list2 = E2_dict[e1_or]
         best_ne = []
         if len(at_list1)>0 or len(at_list2)>0:
-            best_ne = find_best_attack(E2.data.cpu().numpy(), E1.data.cpu().numpy(), pred1.data.cpu().numpy(), pred2.data.cpu().numpy(), at_list1, at_list2, embd_e, embd_rel, model)
+            best_ne = find_best_attack(E2.data.cpu().numpy(),
+                                       E1.data.cpu().numpy(),
+                                       pred1.data.cpu().numpy(),
+                                       pred2.data.cpu().numpy(),
+                                       at_list1, at_list2, embd_e, embd_rel, model)
  
         if e2_or in E2_dict and len(best_ne)>0:
             str_at += [[dict_idtotoken[best_ne[0]],
