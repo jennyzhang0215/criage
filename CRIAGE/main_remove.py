@@ -242,7 +242,7 @@ def main():
     train_data =[]
     with open('data/'+Config.dataset+'/train.txt', 'r') as f:
         for i, line in enumerate(f):
-            e1, rel, e2 = line.decode('utf-8').split('\t')
+            e1, rel, e2 = line.strip().split('\t')
             e1 = e1.strip()#.lower()
             e2 = e2.strip()#.lower()
             rel = rel.strip()#.lower()
