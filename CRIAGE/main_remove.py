@@ -67,13 +67,11 @@ def point_hess(e_o, nei, embd_e, embd_rel):
         H += Sig * np.dot(np.transpose(X), X)
     return H
 def point_score(Y, X, e_o, H):
-    print('original score', np.dot(e_o, np.transpose(H)))
-    sig_tri = sig(e_o, X) 
+    sig_tri = sig(e_o, X)
     M = np.linalg.inv(H + (sig_tri)*(1-sig_tri)*np.dot(np.transpose(X), X))
     Score = - np.dot(Y, np.transpose((1-sig_tri)*np.dot(X, M)))
     return Score, M
 def find_best_attack(e_o, e_s, Y1, Y2, nei1, nei2, embd_e, embd_rel, model):
-    print("\n\n")
     dict_s = {}
     if len(nei1) > 0:
         H1 = point_hess(e_o, nei1, embd_e, embd_rel)
@@ -87,6 +85,8 @@ def find_best_attack(e_o, e_s, Y1, Y2, nei1, nei2, embd_e, embd_rel, model):
             pred = model.encoder(e1, rel).data.cpu().numpy()
             score_t, M = point_score(Y1, pred, e_o , H1)
             dict_s[i] = score_t
+    #sorted_score = sorted(dict_s.items(), key=operator.itemgetter(1))
+
     if len(nei2) > 0: 
         H2 = point_hess(e_s, nei2, embd_e, embd_rel) 
         if len(nei2)> 50:
@@ -287,11 +287,13 @@ def main():
         e1 = torch.cuda.LongTensor([e1_or])
         rel = torch.cuda.LongTensor([rel])
         e2 = torch.cuda.LongTensor([e2_or])
-        pred1 = model.encoder(e1, rel)
-        pred2 = model.encoder(e2, rel)
-        E2 = model.encoder_2(e2)
-        E1 = model.encoder_2(e1)
-        
+        pred1 = model.encoder(e1, rel) # f_{h,r}
+        pred2 = model.encoder(e2, rel) # f_{r,t}
+        E2 = model.encoder_2(e2) # e_2
+        E1 = model.encoder_2(e1) # e_1
+        print('original score (<h,r>,t)', np.dot(e2, np.transpose(model.encoder(e1, rel).data.cpu().numpy())))
+        print('original score (h,<r,t>)', np.dot(e1, np.transpose(model.encoder(e2, rel).data.cpu().numpy())))
+
         at_list1 = []
         at_list2 = []
         if e2_or in E2_dict:
@@ -300,10 +302,10 @@ def main():
             at_list2 = E2_dict[e1_or]
         best_ne = []
         if len(at_list1)>0 or len(at_list2)>0:
-            best_ne = find_best_attack(E2.data.cpu().numpy(),
-                                       E1.data.cpu().numpy(),
-                                       pred1.data.cpu().numpy(),
-                                       pred2.data.cpu().numpy(),
+            best_ne = find_best_attack(E2.data.cpu().numpy(), # tail
+                                       E1.data.cpu().numpy(), # head
+                                       pred1.data.cpu().numpy(), # f_{h,r}
+                                       pred2.data.cpu().numpy(), # f_{r,t}
                                        at_list1, at_list2, embd_e, embd_rel, model)
  
         if e2_or in E2_dict and len(best_ne)>0:
