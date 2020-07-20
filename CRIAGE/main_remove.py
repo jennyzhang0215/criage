@@ -73,6 +73,7 @@ def point_score(Y, X, e_o, H):
     Score = - np.dot(Y, np.transpose((1-sig_tri)*np.dot(X, M)))
     return Score, M
 def find_best_attack(e_o, e_s, Y1, Y2, nei1, nei2, embd_e, embd_rel, model):
+    print("\n\n")
     dict_s = {}
     if len(nei1) > 0:
         H1 = point_hess(e_o, nei1, embd_e, embd_rel)
