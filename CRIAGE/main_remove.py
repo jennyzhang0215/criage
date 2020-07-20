@@ -118,7 +118,6 @@ def find_best_at(pred, E2):
     B = np.true_divide(math.sqrt(0.5)-A*A1, A2) 
     return float(A), float(B)
 
-
 ''' Preprocess knowledge graph using spodernet. '''
 def preprocess(dataset_name, delete_data=False):
     full_path = 'data/{0}/e1rel_to_e2_full.json'.format(dataset_name)
@@ -227,7 +226,7 @@ def main():
     print(params)
     print(np.sum(params))
     print(model)
-    p_dict = torch.load('embeddings/original_embeddings.pt')
+    p_dict = torch.load('embeddings/auto-embeddings.pt')
     print("loaded dict:", p_dict)
     model.load_state_dict(p_dict)
     # opt = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=Config.learning_rate, weight_decay=Config.L2)

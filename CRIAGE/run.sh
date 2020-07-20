@@ -27,7 +27,7 @@ CUDA_VISIBLE_DEVICES=0 python -u main.py model $MODEL \
     dataset $DATASET \
     process $PROCESS \
 
-
+echo "Train The Inverter Network......"
 CUDA_VISIBLE_DEVICES=0 python -u main_auto.py model $MODEL \
     input_drop 0.2 \
     hidden_drop 0.3 \
