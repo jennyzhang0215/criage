@@ -67,6 +67,7 @@ def point_hess(e_o, nei, embd_e, embd_rel):
         H += Sig * np.dot(np.transpose(X), X)
     return H
 def point_score(Y, X, e_o, H):
+    print('original score', np.dot(e_o, np.transpose(H)))
     sig_tri = sig(e_o, X) 
     M = np.linalg.inv(H + (sig_tri)*(1-sig_tri)*np.dot(np.transpose(X), X))
     Score = - np.dot(Y, np.transpose((1-sig_tri)*np.dot(X, M)))
