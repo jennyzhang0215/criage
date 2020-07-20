@@ -5,7 +5,7 @@ import sys
 #reload(sys)
 #sys.setdefaultencoding('utf-8')
 from evaluation import ranking_and_hits, attack_tri
-from model import ConvE, DistMult, Complex
+from model_auto import ConvE, DistMult, Complex
 from spodernet.preprocessing.pipeline import Pipeline, DatasetStreamer
 from spodernet.preprocessing.processors import JsonLoaderProcessors, AddToVocab, StreamToHDF5, CustomTokenizer
 from spodernet.preprocessing.processors import ConvertTokenToIdx, ToLower, DictKey2ListMapper
@@ -26,7 +26,7 @@ Config.embedding_dim = 200
 
 #model_name = 'DistMult_{0}_{1}'.format(Config.input_dropout, Config.dropout)
 model_name = '{2}_{0}_{1}'.format(Config.input_dropout, Config.dropout, Config.model_name)
-epochs = 95
+epochs = 11
 load = False
 
 #####
@@ -158,11 +158,11 @@ def main():
 
             #print('saving to {0}'.format(model_path))
 
-            if epoch % 10 == 0:
+            if epoch % 5== 0:
                 model.eval()
                 ranking_and_hits(model, test_rank_batcher, vocab, 'test_evaluation', epoch, dict_idtotoken, dict_idtorel)
 
-            if epoch % 90 == 0 and epoch != 0:
+            if epoch % 10 == 0 and epoch != 0:
                 model.eval()
                 print('Save model embeddings to embeddings/original_embeddings.pt ...')
                 torch.save(model.state_dict(), "embeddings/original_embeddings.pt")
