@@ -48,7 +48,7 @@ Config.embedding_dim = 200
 
 #model_name = 'DistMult_{0}_{1}'.format(Config.input_dropout, Config.dropout)
 model_name = '{2}_{0}_{1}'.format(Config.input_dropout, Config.dropout, Config.model_name)
-epochs = 95
+epochs = 11
 load = False
 
 
@@ -187,7 +187,7 @@ def main():
 
         print('saving to {0}'.format(model_path))
 
-        if epoch == 90:
+        if epoch == 10:
             torch.save(model.state_dict(), "embeddings/auto-embeddings.pt")
 
 
