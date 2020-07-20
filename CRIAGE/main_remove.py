@@ -185,7 +185,7 @@ def main():
                                      randomize=False, loader_threads=4, keys=input_keys, is_volatile=True)
     test_rank_batcher = StreamBatcher(Config.dataset, 'test_ranking', Config.batch_size,
                                       randomize=False, loader_threads=4, keys=input_keys, is_volatile=True)
-
+    print("Config.model_name", Config.model_name)
     if Config.model_name is None:
         model = ConvE(vocab['e1'].num_token, vocab['rel'].num_token)
     elif Config.model_name == 'ConvE':

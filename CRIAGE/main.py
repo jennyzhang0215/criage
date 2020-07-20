@@ -90,7 +90,7 @@ def main():
     dev_rank_batcher = StreamBatcher(Config.dataset, 'dev_ranking', Config.batch_size, randomize=False, loader_threads=4, keys=input_keys, is_volatile=True)
     test_rank_batcher = StreamBatcher(Config.dataset, 'test_ranking', Config.batch_size, randomize=False, loader_threads=4, keys=input_keys, is_volatile=True)
 
-
+    print("Config.model_name", Config.model_name)
     if Config.model_name is None:
         model = ConvE(vocab['e1'].num_token, vocab['rel'].num_token)
     elif Config.model_name == 'ConvE':
@@ -148,7 +148,6 @@ def main():
                 e2_multi = str2var['e2_multi1_binary'].float()
                 # label smoothing
                 e2_multi = ((1.0-Config.label_smoothing_epsilon)*e2_multi) + (1.0/e2_multi.size(1))
-
                 pred = model.forward(e1, rel)
                 loss = model.loss(pred, e2_multi)
 
