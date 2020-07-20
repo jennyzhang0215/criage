@@ -29,43 +29,6 @@ CUDA_VISIBLE_DEVICES=0 python -u main.py model $MODEL \
     process $PROCESS \
 
 
-if [ $MODE == "inject" ]
-then
-
-echo "Train The Inverter Network......"
-CUDA_VISIBLE_DEVICES=0 python -u main_auto.py model $MODEL \
-    input_drop 0.2 \
-    hidden_drop 0.3 \
-    feat_drop 0.2 \
-    lr 0.003 \
-    lr_decay 0.995 \
-    dataset $DATASET \
-    process $PROCESS \
-
-echo "Identifying The Attacks......"
-CUDA_VISIBLE_DEVICES=0 python -u main_inject.py model $MODEL \
-    input_drop 0.2 \
-    hidden_drop 0.3 \
-    feat_drop 0.2 \
-    lr 0.003 \
-    lr_decay 0.995 \
-    dataset $DATASET \
-    process $PROCESS \
-
-python -u wrangle_KG.py new_$DATASET
-echo "Retrainin The Model......"
-CUDA_VISIBLE_DEVICES=0 python -u main.py model $MODEL \
-    input_drop 0.2 \
-    hidden_drop 0.3 \
-    feat_drop 0.2 \
-    lr 0.003 \
-    lr_decay 0.995 \
-    dataset new_$DATASET \
-    process $PROCESS \
-
-elif [ $MODE == "remove" ]
-then
-
 echo "Identifying The Attacks......"
 CUDA_VISIBLE_DEVICES=0 python -u main_remove.py model $MODEL \
     input_drop 0.2 \
@@ -86,7 +49,3 @@ CUDA_VISIBLE_DEVICES=0 python -u main.py model $MODEL \
     lr_decay 0.995 \
     dataset new_$DATASET \
     process $PROCESS \
-
-else
-   echo "Unknown MODE" $MODE
-fi
