@@ -84,7 +84,7 @@ def main():
     num_entities = vocab['e1'].num_token
     num_rel = vocab['rel'].num_token
     dict_tokentoid, dict_idtotoken = vocab['e1'].token2idx, vocab['e1'].idx2token
-    dict_reltoid, dict_idtorel = vocab['e1'].token2idx, vocab['e1'].idx2token
+    dict_reltoid, dict_idtorel = vocab['rel'].token2idx, vocab['rel'].idx2token
 
     train_batcher = StreamBatcher(Config.dataset, 'train', Config.batch_size, randomize=True, keys=input_keys)
     dev_rank_batcher = StreamBatcher(Config.dataset, 'dev_ranking', Config.batch_size, randomize=False, loader_threads=4, keys=input_keys, is_volatile=True)

@@ -178,7 +178,8 @@ def main():
     num_entities = vocab['e1'].num_token
     num_rel = vocab['rel'].num_token
     dict_tokentoid, dict_idtotoken = vocab['e1'].token2idx, vocab['e1'].idx2token
-    dict_reltoid, dict_idtorel = vocab['e1'].token2idx, vocab['e1'].idx2token
+    dict_reltoid, dict_idtorel = vocab['rel'].token2idx, vocab['rel'].idx2token
+
     train_batcher = StreamBatcher(Config.dataset, 'train', Config.batch_size,
                                   randomize=True, keys=input_keys)
     dev_rank_batcher = StreamBatcher(Config.dataset, 'dev_ranking', Config.batch_size,
@@ -266,14 +267,17 @@ def main():
     for i in train_data:
         if i[2].lower() in E2_list:
             if dict_tokentoid[i[2].lower()] in E2_dict: 
-                E2_dict[dict_tokentoid[i[2].lower()]] += [(dict_tokentoid[i[0].lower()], dict_reltoid[i[1].lower()], dict_tokentoid[i[2].lower()])]
+                E2_dict[dict_tokentoid[i[2].lower()]] += [(dict_tokentoid[i[0].lower()],
+                                                           dict_reltoid[i[1].lower()],
+                                                           dict_tokentoid[i[2].lower()])]
             else:
-                E2_dict[dict_tokentoid[i[2].lower()]] = [(dict_tokentoid[i[0].lower()], dict_reltoid[i[1].lower()], dict_tokentoid[i[2].lower()])]
+                E2_dict[dict_tokentoid[i[2].lower()]] = [(dict_tokentoid[i[0].lower()],
+                                                          dict_reltoid[i[1].lower()],
+                                                          dict_tokentoid[i[2].lower()])]
 
     str_at = []
     embd_e = model.emb_e.weight.data.cpu().numpy()
     embd_rel = model.emb_rel.weight.data.cpu().numpy()
-
     n_t = 0
     for trip in attack_list:
         if n_t % 200 == 0:
