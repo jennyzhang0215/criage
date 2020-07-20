@@ -49,7 +49,7 @@ Config.embedding_dim = 200
 
 
 model_name = '{2}_{0}_{1}'.format(Config.input_dropout, Config.dropout, Config.model_name)
-epochs = 95 
+epochs = 6
 load = False
 
 if Config.dataset is None:
@@ -177,8 +177,8 @@ def main():
     vocab = p.state['vocab']
 
     num_entities = vocab['e1'].num_token
-    dict_tokentoid, dict_idtotoken = vocab['e1'].tokendicts()
-    dict_reltoid, dict_idtorel = vocab['rel'].tokendicts()
+    dict_tokentoid, dict_idtotoken = vocab['e1'].token2idx, vocab['e1'].idx2token
+    dict_reltoid, dict_idtorel = vocab['e1'].token2idx, vocab['e1'].idx2token
 
 
     num_rel = vocab['rel'].num_token 

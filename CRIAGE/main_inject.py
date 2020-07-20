@@ -179,8 +179,8 @@ def main():
     vocab = p.state['vocab']
 
     num_entities = vocab['e1'].num_token
-    dict_tokentoid, dict_idtotoken = vocab['e1'].tokendicts()
-    dict_reltoid, dict_idtorel = vocab['rel'].tokendicts()
+    dict_tokentoid, dict_idtotoken = vocab['e1'].token2idx, vocab['e1'].idx2token
+    dict_reltoid, dict_idtorel = vocab['e1'].token2idx, vocab['e1'].idx2token
 
     num_rel = vocab['rel'].num_token 
     train_batcher = StreamBatcher(Config.dataset, 'train', Config.batch_size, randomize=True, keys=input_keys)
@@ -235,7 +235,8 @@ def main():
     model.load_state_dict(torch.load('embeddings/auto-embeddings.pt'))
 
 
-    opt = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=Config.learning_rate, weight_decay=Config.L2)
+    opt = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()),
+                           lr=Config.learning_rate, weight_decay=Config.L2)
     # One hot encoding buffer that you create out of the loop and just keep reusing
     y_onehot_e1 = torch.FloatTensor(Config.batch_size, num_entities)
     # One hot encoding buffer that you create out of the loop and just keep reusing

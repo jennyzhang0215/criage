@@ -1,36 +1,20 @@
-import json
 import torch
-import pickle
 import numpy as np
-import numpy
 import argparse
 import sys
-import os
-import math
 #reload(sys)
 #sys.setdefaultencoding('utf-8')
-import codecs
-import random
-from os.path import join
-#import torch.backends.cudnn as cudnn
-
-#from num_process import num_nextbatch
 from evaluation import ranking_and_hits, attack_tri
 from model import ConvE, DistMult, Complex
-
 from spodernet.preprocessing.pipeline import Pipeline, DatasetStreamer
-from spodernet.preprocessing.processors import JsonLoaderProcessors, Tokenizer, AddToVocab, SaveLengthsToState, StreamToHDF5, SaveMaxLengthsToState, CustomTokenizer
-from spodernet.preprocessing.processors import ConvertTokenToIdx, ApplyFunction, ToLower, DictKey2ListMapper, ApplyFunction, StreamToBatch
+from spodernet.preprocessing.processors import JsonLoaderProcessors, AddToVocab, StreamToHDF5, CustomTokenizer
+from spodernet.preprocessing.processors import ConvertTokenToIdx, ToLower, DictKey2ListMapper
 from spodernet.utils.global_config import Config, Backends
-from spodernet.utils.logger import Logger, LogLevel
 from spodernet.preprocessing.batching import StreamBatcher
 from spodernet.preprocessing.pipeline import Pipeline
 from spodernet.hooks import LossHook, ETAHook
-from spodernet.utils.util import Timer
-from spodernet.utils.cuda_utils import CUDATimer
 from spodernet.preprocessing.processors import TargetIdx2MultiTarget
 np.set_printoptions(precision=3)
-#timer = CUDATimer()
 
 # parse console parameters and set global variables
 Config.backend = Backends.TORCH
@@ -39,7 +23,6 @@ Config.parse_argv(sys.argv)
 Config.cuda = True
 Config.embedding_dim = 200
 #Logger.GLOBAL_LOG_LEVEL = LogLevel.DEBUG
-
 
 #model_name = 'DistMult_{0}_{1}'.format(Config.input_dropout, Config.dropout)
 model_name = '{2}_{0}_{1}'.format(Config.input_dropout, Config.dropout, Config.model_name)
@@ -91,7 +74,6 @@ def preprocess(dataset_name, delete_data=False):
         p.add_post_processor(StreamToHDF5(name, samples_per_file=1000, keys=input_keys))
         p.execute(d)
 
-
 def main():
     if Config.process: preprocess(Config.dataset, delete_data=True)
     input_keys = ['e1', 'rel', 'e2', 'e2_multi1', 'e2_multi2']
@@ -123,8 +105,8 @@ def main():
         #log.info('Unknown model: {0}', Config.model_name)
         raise Exception("Unknown model!")
 
-    train_batcher.at_batch_prepared_observers.insert(1,TargetIdx2MultiTarget(num_entities, 'e2_multi1', 'e2_multi1_binary'))
-
+    train_batcher.at_batch_prepared_observers.insert(1, TargetIdx2MultiTarget(num_entities,
+                                                                              'e2_multi1', 'e2_multi1_binary'))
 
     eta = ETAHook('train', print_every_x_batches=100)
     train_batcher.subscribe_to_events(eta)
@@ -149,39 +131,42 @@ def main():
     else:
         model.init()
 
+        print("Print model information ...")
+        print(model)
+        params = [value.numel() for value in model.parameters()]
+        print('params', params) # [8221400, 4000]
+        print(np.sum(params))   # 8225400
+        print(num_entities)     # 41107
 
-    params = [value.numel() for value in model.parameters()]
-    print(params)
-    print(np.sum(params))
-    print(num_entities)
-    opt = torch.optim.Adam(model.parameters(), lr=Config.learning_rate, weight_decay=Config.L2)
-    for epoch in range(epochs):
-        model.train()
-        for i, str2var in enumerate(train_batcher):
-            opt.zero_grad()
-            e1 = str2var['e1']
-            rel = str2var['rel']
-            e2_multi = str2var['e2_multi1_binary'].float()
-            # label smoothing
-            e2_multi = ((1.0-Config.label_smoothing_epsilon)*e2_multi) + (1.0/e2_multi.size(1))	
+        opt = torch.optim.Adam(model.parameters(), lr=Config.learning_rate, weight_decay=Config.L2)
+        for epoch in range(epochs):
+            model.train()
+            for i, str2var in enumerate(train_batcher):
+                opt.zero_grad()
+                e1 = str2var['e1']
+                rel = str2var['rel']
+                e2_multi = str2var['e2_multi1_binary'].float()
+                # label smoothing
+                e2_multi = ((1.0-Config.label_smoothing_epsilon)*e2_multi) + (1.0/e2_multi.size(1))
 
-            pred = model.forward(e1, rel)
-            loss = model.loss(pred, e2_multi)
+                pred = model.forward(e1, rel)
+                loss = model.loss(pred, e2_multi)
 
-            loss.backward()
-            opt.step()
+                loss.backward()
+                opt.step()
 
-            train_batcher.state.loss = loss
+                train_batcher.state.loss = loss
 
-        print('saving to {0}'.format(model_path))
+            #print('saving to {0}'.format(model_path))
 
-        if epoch % 10 == 0:
-            model.eval()
-            ranking_and_hits(model, test_rank_batcher, vocab, 'test_evaluation', epoch, dict_idtotoken, dict_idtorel)
+            if epoch % 10 == 0:
+                model.eval()
+                ranking_and_hits(model, test_rank_batcher, vocab, 'test_evaluation', epoch, dict_idtotoken, dict_idtorel)
 
-        if epoch % 90 == 0 and epoch != 0:
-            model.eval()
-            torch.save(model.state_dict(), "embeddings/original_embeddings.pt")
+            if epoch % 90 == 0 and epoch != 0:
+                model.eval()
+                print('Save model embeddings to embeddings/original_embeddings.pt ...')
+                torch.save(model.state_dict(), "embeddings/original_embeddings.pt")
 
 
 if __name__ == '__main__':
