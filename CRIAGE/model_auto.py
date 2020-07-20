@@ -1,14 +1,10 @@
 import torch
 from torch.nn import functional as F, Parameter
 from torch.autograd import Variable
-
-
 from spodernet.utils.global_config import Config
 from spodernet.utils.cuda_utils import CUDATimer
 from torch.nn.init import xavier_normal, xavier_uniform
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
-
-
 
 class Complex(torch.nn.Module):
     def __init__(self, num_entities, num_relations):
@@ -48,7 +44,6 @@ class Complex(torch.nn.Module):
         pred = F.sigmoid(pred)
 
         return pred
-
 
 class DistMult(torch.nn.Module):
     def __init__(self, num_entities, num_relations):
@@ -99,7 +94,6 @@ class DistMult(torch.nn.Module):
         E1 = self.linear_e1(pred)
         R = self.linear_rel(pred)
         return E1, R
-	 
 
 class ConvE(torch.nn.Module):
     def __init__(self, num_entities, num_relations):
@@ -181,5 +175,3 @@ class ConvE(torch.nn.Module):
         E1 = self.linear_e1(pred)
         R = self.linear_rel(pred)
         return E1, R
-
-
