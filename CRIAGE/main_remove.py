@@ -300,7 +300,9 @@ def main():
             best_ne = find_best_attack(E2.data.cpu().numpy(), E1.data.cpu().numpy(), pred1.data.cpu().numpy(), pred2.data.cpu().numpy(), at_list1, at_list2, embd_e, embd_rel, model)
  
         if e2_or in E2_dict and len(best_ne)>0:
-            str_at += [[dict_idtotoken[best_ne[0]].decode('utf-8'), dict_idtorel[best_ne[1]].decode('utf-8'), dict_idtotoken[best_ne[2]].decode('utf-8')]]
+            str_at += [[dict_idtotoken[best_ne[0]],
+                        dict_idtorel[best_ne[1]],
+                        dict_idtotoken[best_ne[2]]]]
 
     print(len(str_at), len(train_data))
     new_train = []
